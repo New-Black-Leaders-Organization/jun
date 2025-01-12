@@ -1,0 +1,71 @@
+gh pr checkout 5555import jose
+from time import time
+from Crypto.PublicKey import RSA
+
+# key for demonstration purposes
+key = RSA.generate(2048)
+
+claims = {
+    'iss': 'http://www.example.com',
+    'exp': int(time()) + 3600,
+    'sub': 42,
+}
+
+# encrypt claims using the public key
+pub_jwk = {'k': key.publickey().exportKey('PEM')}
+
+jwe = jose.encrypt(claims, pub_jwk)
+# JWE(header='eyJhbGciOiAiUlNBLU9BRVAiLCAiZW5jIjogIkExMjhDQkMtSFMyNTYifQ',
+# cek='SsLgP2bNKYDYGzHvLYY7rsVEBHSms6_jW-WfglHqD9giJhWwrOwqLZOaoOycsf_EBJCkHq9-vbxRb7WiNdy_C9J0_RnRRBGII6z_G4bVb18bkbJMeZMV6vpUut_iuRWoct_weg_VZ3iR2xMbl-yE8Hnc63pAGJcIwngfZ3sMX8rBeni_koxCc88LhioP8zRQxNkoNpvw-kTCz0xv6SU_zL8p79_-_2zilVyMt76Pc7WV46iI3EWIvP6SG04sguaTzrDXCLp6ykLGaXB7NRFJ5PJ9Lmh5yinAJzCdWQ-4XKKkNPorSiVmRiRSQ4z0S2eo2LtvqJhXCrghKpBNgbtnJQ',
+# iv='Awelp3ryBVpdFhRckQ-KKw',
+# ciphertext='1MyZ-3nky1EFO4UgTB-9C2EHpYh1Z-ij0RbiuuMez70nIH7uqL9hlhskutO0oPjqdpmNc9glSmO9pheMH2DVag',
+# tag='Xccck85XZMvG-fAJ6oDnAw')
+
+# issue the compact serialized version to the clients. this is what will be
+# transported along with requests to target systems.
+
+jwt = jose.serialize_compact(jwe)
+# 'eyJhbGciOiAiUlNBLU9BRVAiLCAiZW5jIjogIkExMjhDQkMtSFMyNTYifQ.SsLgP2bNKYDYGzHvLYY7rsVEBHSms6_jW-WfglHqD9giJhWwrOwqLZOaoOycsf_EBJCkHq9-vbxRb7WiNdy_C9J0_RnRRBGII6z_G4bVb18bkbJMeZMV6vpUut_iuRWoct_weg_VZ3iR2xMbl-yE8Hnc63pAGJcIwngfZ3sMX8rBeni_koxCc88LhioP8zRQxNkoNpvw-kTCz0xv6SU_zL8p79_-_2zilVyMt76Pc7WV46iI3EWIvP6SG04sguaTzrDXCLp6ykLGaXB7NRFJ5PJ9Lmh5yinAJzCdWQ-4XKKkNPorSiVmRiRSQ4z0S2eo2LtvqJhXCrghKpBNgbtnJQ.Awelp3ryBVpdFhRckQ-KKw.1MyZ-3nky1EFO4UgTB-9C2EHpYh1Z-ij0RbiuuMez70nIH7uqL9hlhskutO0oPjqdpmNc9glSmO9pheMH2DVag.Xccck85XZMvG-fAJ6oDnAw'
+
+# decrypt on the other end using the private key
+priv_jwk = {'k': key.exportKey('PEM')}
+
+jwt = jose.decrypt(jose.deserialize_compact(jwt), priv_jwk)
+# JWT(header={u'alg': u'RSA-OAEP', u'enc': u'A128CBC-HS256'},
+# claims={u'iss': u'http://www.example.com', u'sub': 42, u'exp': 1395606273})Crypto.PublicKey1395606273}http://www.example.com1395674427}import jose
+
+claims = {
+    'iss': 'http://www.example.com',
+    'exp': int(time()) + 3600,
+    'sub': 42,
+}
+
+jwk = {'k': 'password'}
+
+jws = jose.sign(claims, jwk, alg='HS256')
+# JWS(header='eyJhbGciOiAiSFMyNTYifQ',
+# payload='eyJpc3MiOiAiaHR0cDovL3d3dy5leGFtcGxlLmNvbSIsICJzdWIiOiA0MiwgImV4cCI6IDEzOTU2NzQ0Mjd9',
+# signature='WYApAiwiKd-eDClA1fg7XFrnfHzUTgrmdRQY4M19Vr8')
+
+# issue the compact serialized version to the clients. this is what will be
+# transported along with requests to target systems.
+
+jwt = jose.serialize_compact(jws)
+# 'eyJhbGciOiAiSFMyNTYifQ.eyJpc3MiOiAiaHR0cDovL3d3dy5leGFtcGxlLmNvbSIsICJzdWIiOiA0MiwgImV4cCI6IDEzOTU2NzQ0Mjd9.WYApAiwiKd-eDClA1fg7XFrnfHzUTgrmdRQY4M19Vr8'
+
+jose.verify(jose.deserialize_compact(jwt), jwk, 'HS256')
+# JWT(header={u'alg': u'HS256'}, claims={u'iss': u'http://www.example.com', u'sub': 42, u'exp': 1395674427})jwk = {'k': <password>}docs/source/index.rst# These are supported funding model platforms
+
+github: # Replace with up to 4 GitHub Sponsors-enabled usernames e.g., [user1, user2]
+patreon: # Replace with a single Patreon username
+open_collective: # Replace with a single Open Collective username
+ko_fi: # Replace with a single Ko-fi username
+tidelift: # Replace with a single Tidelift platform-name/package-name e.g., npm/babel
+community_bridge: # Replace with a single Community Bridge project-name e.g., cloud-foundry
+liberapay: # Replace with a single Liberapay username
+issuehunt: # Replace with a single IssueHunt username
+lfx_crowdfunding: # Replace with a single LFX Crowdfunding project-name e.g., cloud-foundry
+polar: # Replace with a single Polar username
+buy_me_a_coffee: # Replace with a single Buy Me a Coffee username
+thanks_dev: # Replace with a single thanks.dev username
+custom: # Replace with up to 4 custom sponsorship URLs e.g., ['link1', 'link2']
